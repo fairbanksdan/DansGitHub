@@ -29,16 +29,27 @@
 }
 
 - (void)viewDidLoad
+
 {
     [super viewDidLoad];
-    shelf = [NSArray arrayWithObjects:[[Shelf alloc] initWithName:@"Shelf 1"], [[Shelf alloc] initWithName:@"Shelf 2"], [[Shelf alloc] initWithName:@"Shelf 3"], [[Shelf alloc] initWithName:@"Shelf 4"], nil];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.library = [[Library alloc] initWithName:@"Library"];
+    
+    
+    // Add all the shelves to the library object
+    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 1"]];
+    
+    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 2"]];
+    
+    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 3"]];
+    
+    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 4"]];
+    
+    
+    // to facilitate the full flow from the ShelfTableViewController to the BookTableViewController,
+    
+    // you will need to then create books, and then enshelf them in the right shelf.  You will probably need to create a temporary shelf variable before adding the shelf itself into self.library.shelves.
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,11 +124,13 @@
 */
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     if([segue.identifier isEqualToString:@"showArrayDetail2"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         BookTableViewController *destViewController = segue.destinationViewController;
-//#warning this is where changes need to be made alfred.gopez@gmail.com
-        destViewController.bookName = [shelf objectAtIndex:indexPath.row]; // set destViewController.shelf instead
+        //#warning this is where changes need to be made alfred.gopez@gmail.com
+        // destViewController.bookName = [shelf objectAtIndex:indexPath.row]; // with the line below, you can delete the bookName property on the bookTableViewController.
+        destViewController.shelf = [self.library.shelves objectAtIndex:indexPath.row];
         destViewController.title = destViewController.bookName;
     }
 }

@@ -10,7 +10,7 @@
 
 @interface Library : NSObject
 
-@property (strong, nonatomic) NSString *library;
+@property (strong, nonatomic) NSString *libraryName;
 
 @property (readwrite) NSMutableArray *shelves;
 

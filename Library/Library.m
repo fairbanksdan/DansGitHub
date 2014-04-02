@@ -14,7 +14,7 @@
 - (instancetype) initWithName:(NSString *)library{
     if (self = [super init])
     {
-        self.library = library;
+        self.libraryName = library;
         self.shelves = [[NSMutableArray alloc] init];
     }
     

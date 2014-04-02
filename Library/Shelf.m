@@ -7,6 +7,7 @@
 //
 
 #import "Shelf.h"
+#import "Book.h"
 
 @implementation Shelf
 
@@ -19,7 +20,13 @@
     
     return self;
 }
-
+- (void) addNewBookWithTitle: (NSString *)title {
+    
+    Book *book  = [[Book alloc] initWithTitle: title];
+    
+    [book enshelf: self];
+    
+}
 
 
 @end

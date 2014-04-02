@@ -11,6 +11,8 @@
 
 @interface BookTableViewController ()
 
+@property (readwrite) NSIndexPath *path;
+
 @end
 
 @implementation BookTableViewController {
@@ -33,24 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    /*books1 = [NSArray arrayWithObjects:[[Book alloc] initWithTitle:@"Harry Potter"], [[Book alloc] initWithTitle:@"The Once and Future King"], [[Book alloc] initWithTitle:@"Les Miserables"], nil];
-    books2 = [NSArray arrayWithObjects:[[Book alloc] initWithTitle:@"Gone with the Wind"], [[Book alloc] initWithTitle:@"To Kill a Mocking Bird"], [[Book alloc] initWithTitle:@"Jurassic Park"], nil];
-    books3 = [NSArray arrayWithObjects:[[Book alloc] initWithTitle:@"The Hobbit"], [[Book alloc] initWithTitle:@"Jane Eyre"], [[Book alloc] initWithTitle:@"War and Peace"], [[Book alloc] initWithTitle:@"Uncle Tom's Cabin"], nil];
-    books4 = [NSArray arrayWithObjects:[[Book alloc] initWithTitle:@"A Tale of Two Cities"], [[Book alloc] initWithTitle:@"Pride and Prejudice"], [[Book alloc] initWithTitle:@"Ivanhoe"], nil];
-    */
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    self.shelf = [[Shelf alloc] initWithName:@"Shelf 1"];
-    
-    NSArray *books = [NSArray arrayWithObjects:[[Book alloc] initWithTitle:@"Harry Potter"], [[Book alloc] initWithTitle:@"The Once and Future King"], [[Book alloc] initWithTitle:@"Les Miserables"], nil];
-    
-    for (Book *book in books) {
-        [book enshelf:self.shelf];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,20 +52,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    /*if ([_bookName isEqualToString:@"Shelf 1"]) {
-        return [books1 count];
-    }
-    else if([_bookName isEqualToString:@"Shelf 2"]) {
-        return [books2 count];
-    }
-    else if([_bookName isEqualToString:@"Shelf 3"]) {
-        return [books3 count];
-    }
-    else if([_bookName isEqualToString:@"Shelf 4"]) {
-        return [books4 count];
-    }*/
 
-    return self.shelf.books.count;
+    return self.shelf.books.count +1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -91,24 +63,14 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:SimpleTableIdentifier];
     }
-    
-    Book *book = [self.shelf.books objectAtIndex:indexPath.row];
-    cell.textLabel.text = book.title;
-    /*
-    if ([_bookName isEqualToString:@"Shelf 1"]) {
-        Book *book = [books1 objectAtIndex:indexPath.row];
+    if (indexPath.row < self.shelf.books.count) {
+        Book *book = [self.shelf.books objectAtIndex:indexPath.row];
         cell.textLabel.text = book.title;
+    } else {
+        cell.textLabel.text = @"Add New Book";
     }
-    else if ([_bookName isEqualToString:@"Shelf 2"]) {
-        cell.textLabel.text = [books2 objectAtIndex:indexPath.row];
-    }
-    else if ([_bookName isEqualToString:@"Shelf 3"]) {
-        cell.textLabel.text = [books3 objectAtIndex:indexPath.row];
-    }
-    else if ([_bookName isEqualToString:@"Shelf 4"]) {
-        cell.textLabel.text = [books4 objectAtIndex:indexPath.row];
-    }*/
     
+
     return cell;
 }
 
@@ -127,13 +89,35 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
+        Book *book = [self.shelf.books objectAtIndex:indexPath.row];
+        [book unshelf];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        
     }   
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger selectedRow = indexPath.row;
+    if (selectedRow == self.shelf.books.count) {
+        self.path = indexPath;
+        UIAlertView * bookTitlePrompt = [[UIAlertView alloc] initWithTitle:@"Add New Book" message:@"Please enter the book title." delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"Ok", nil];
+        bookTitlePrompt.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [bookTitlePrompt show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [self.shelf addNewBookWithTitle:[[alertView textFieldAtIndex:0] text]];
+        
+        NSArray *paths = [NSArray arrayWithObject:self.path];
+        [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+    }
+    
+}
 
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath

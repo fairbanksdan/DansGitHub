@@ -10,14 +10,13 @@
 #import "BookTableViewController.h"
 #import "Shelf.h"
 #import "Library.h"
+#import "Book.h"
 
 @interface ShelfTableViewController ()
 
 @end
 
-@implementation ShelfTableViewController {
-    NSArray *shelf;
-}
+@implementation ShelfTableViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -32,24 +31,7 @@
 
 {
     [super viewDidLoad];
-    
-    
-    self.library = [[Library alloc] initWithName:@"Library"];
-    
-    
-    // Add all the shelves to the library object
-    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 1"]];
-    
-    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 2"]];
-    
-    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 3"]];
-    
-    [self.library.shelves addObject: [[Shelf alloc] initWithName:@"Shelf 4"]];
-    
-    
-    // to facilitate the full flow from the ShelfTableViewController to the BookTableViewController,
-    
-    // you will need to then create books, and then enshelf them in the right shelf.  You will probably need to create a temporary shelf variable before adding the shelf itself into self.library.shelves.
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,7 +49,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [shelf count];
+    return [self.library.shelves count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -128,11 +110,10 @@
     if([segue.identifier isEqualToString:@"showArrayDetail2"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         BookTableViewController *destViewController = segue.destinationViewController;
-        //#warning this is where changes need to be made alfred.gopez@gmail.com
         // destViewController.bookName = [shelf objectAtIndex:indexPath.row]; // with the line below, you can delete the bookName property on the bookTableViewController.
         destViewController.shelf = [self.library.shelves objectAtIndex:indexPath.row];
         destViewController.title = destViewController.bookName;
     }
 }
-
 @end
+

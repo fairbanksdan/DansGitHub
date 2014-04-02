@@ -16,4 +16,6 @@
 
 - (instancetype) initWithName:(NSString *)shelfName;
 
+- (void) addNewBookWithTitle: (NSString *)title;
+
 @end

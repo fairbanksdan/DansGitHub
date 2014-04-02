@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "Library.h"
+#import "Shelf.h"
 
 @interface ShelfTableViewController : UITableViewController
 
 @property (strong, nonatomic) NSString *shelves;
 @property (strong, nonatomic) Library *library;
+@property (readwrite) Shelf *shelf;
 
 @end

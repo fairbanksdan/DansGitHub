@@ -10,7 +10,7 @@
 
 #import "Shelf.h"
 
-@interface BookTableViewController : UITableViewController
+@interface BookTableViewController : UITableViewController<UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSString *bookName;
 @property (strong, nonatomic) Shelf *shelf;

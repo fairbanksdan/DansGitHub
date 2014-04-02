@@ -9,15 +9,16 @@
 #import "LibraryTableViewController.h"
 #import "ShelfTableViewController.h"
 #import "Shelf.h"
+#import "Library.h"
 
 
 @interface LibraryTableViewController ()
 
+@property (strong, readwrite)NSArray *libraries;
+
 @end
 
-@implementation LibraryTableViewController {
-    NSArray *library;
-}
+@implementation LibraryTableViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -31,12 +32,39 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    library = [NSArray arrayWithObjects:@"Library", nil];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    Library *library = [[Library alloc] initWithName:@"Library"];
+    
+    Shelf *shelf1 = [[Shelf alloc] initWithName:@"Shelf 1"];
+    Shelf *shelf2 = [[Shelf alloc] initWithName:@"Shelf 2"];
+    Shelf *shelf3 = [[Shelf alloc] initWithName:@"Shelf 3"];
+    Shelf *shelf4 = [[Shelf alloc] initWithName:@"Shelf 4"];
+    
+    
+    [shelf1 addNewBookWithTitle: @"Harry Potter"];
+    [shelf1 addNewBookWithTitle: @"The Once and Future King"];
+    [shelf1 addNewBookWithTitle: @"Les Miserables"];
+    [shelf2 addNewBookWithTitle: @"The Hobbit"];
+    [shelf2 addNewBookWithTitle: @"A Tale of Two Cities"];
+    [shelf2 addNewBookWithTitle: @"A Christmas Carol"];
+    [shelf3 addNewBookWithTitle: @"Great Expectations"];
+    [shelf3 addNewBookWithTitle: @"Uncle Tom's Cabin"];
+    [shelf3 addNewBookWithTitle: @"Moby Dick"];
+    [shelf3 addNewBookWithTitle: @"Robinson Crusoe"];
+    [shelf4 addNewBookWithTitle: @"The Iliad"];
+    [shelf4 addNewBookWithTitle: @"The Return of the Native"];
+    [shelf4 addNewBookWithTitle: @"Jurassic Park"];
+    
+    
+    [library.shelves addObject: shelf1];
+    
+    [library.shelves addObject: shelf2];
+    
+    [library.shelves addObject: shelf3];
+    
+    [library.shelves addObject: shelf4];
+    
+    self.libraries = [NSArray arrayWithObjects:library, nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,7 +82,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [library count];
+    return [self.libraries count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -66,7 +94,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:SimpleTableIdentifier];
     }
     
-    cell.textLabel.text = [library objectAtIndex:indexPath.row];
+    Library *library = [self.libraries objectAtIndex:indexPath.row];
+    cell.textLabel.text = library.libraryName;
     
     return cell;
 }
@@ -114,8 +143,10 @@
     if([segue.identifier isEqualToString:@"showArrayDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ShelfTableViewController *destViewController = segue.destinationViewController;
-        destViewController.shelves = [library objectAtIndex:indexPath.row];
+        Library *library = [self.libraries objectAtIndex:indexPath.row];
+        destViewController.shelves = library.libraryName;
         destViewController.title = destViewController.shelves;
+        destViewController.library = library;
     }
 }
 
